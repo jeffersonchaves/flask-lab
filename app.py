@@ -1,18 +1,11 @@
 from flask import Flask, render_template
-from flaskext.mysql import MySQL, pymysql
+from database.connection import ConnectionFactory
 from outro import nome
 
 app = Flask(__name__)  # sao 2 underlines antes e 2 depois
 
+connectionFactory = ConnectionFactory(app)
 
-app.config['MYSQL_DATABASE_USER'] = 'jrh723dnnjs1u5ce'
-app.config['MYSQL_DATABASE_PASSWORD'] = 'w8hzubq4xseu9djj'
-app.config['MYSQL_DATABASE_DB'] = 'gcj94fo1u2n7n1ze'
-app.config['MYSQL_DATABASE_HOST'] = 'z5zm8hebixwywy9d.cbetxkdyhwsb.us-east-1.rds.amazonaws.com'
-mysql = MySQL(cursorclass=pymysql.cursors.DictCursor)
-mysql.init_app(app)
-
-conn = mysql.connect()
 
 # 1 rota -> meusite.com.br/ meusite.com.br/contatos
 # 2 funcao
@@ -21,7 +14,7 @@ conn = mysql.connect()
 @app.route("/home/")
 @app.route("/")
 def index():
-    conn = mysql.connect()
+    conn = connectionFactory.getConnection()
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM seller")
     rows = cursor.fetchall()
@@ -44,9 +37,11 @@ def contato():
 
 @app.route('/vendedores', methods=["GET"])
 def method_name():
-    c = conn.cursor()
-    c.execute("SELECT * FROM seller")
-    rows = c.fetchall()
+    conn = connectionFactory.getConnection()
+
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM seller")
+    rows = cursor.fetchall()
     for row in rows:
         print(row)
 
@@ -61,10 +56,10 @@ def method_name():
 
 @app.route('/vendedores/<int:id>')
 def vendedor(id: int):
-
-    c = conn.cursor()
-    c.execute(f"SELECT * FROM seller WHERE Id={id}")
-    row = c.fetchone()
+    conn = connectionFactory.getConnection()
+    cursor = conn.cursor()
+    cursor.execute(f"SELECT * FROM seller WHERE Id={id}")
+    row = cursor.fetchone()
 
     return f"você selecionou o vendedor {row}"
 
