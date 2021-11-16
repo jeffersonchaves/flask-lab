@@ -3,13 +3,11 @@ from pymysql import Connection
 
 
 class ConnectionFactory:
-
     app = None
     mysql = None
     mysqlConnection = None
 
     def __init__(self, app):
-
         self.app = app
         self.app.config['MYSQL_DATABASE_USER'] = 'jrh723dnnjs1u5ce'
         self.app.config['MYSQL_DATABASE_PASSWORD'] = 'w8hzubq4xseu9djj'
@@ -18,7 +16,6 @@ class ConnectionFactory:
 
         self.mysql = MySQL(cursorclass=pymysql.cursors.DictCursor)
         self.mysql.init_app(self.app)
-
 
     def get_connection(self) -> Connection:
         self.mysqlConnection = self.mysql.connect()
