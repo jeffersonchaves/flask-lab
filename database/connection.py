@@ -1,12 +1,11 @@
-from flask.sessions import NullSession
-from pymysql import NULL
 from flaskext.mysql import MySQL, pymysql
+from pymysql import Connection
 
 
 class ConnectionFactory:
 
-    app = NULL
-    mysqlConnection = NULL
+    app = None
+    mysqlConnection = None
 
     def __init__(self, app):
 
@@ -20,5 +19,5 @@ class ConnectionFactory:
         mysql.init_app(self.app)
         self.mysqlConnection = mysql.connect()
 
-    def getConnection(self):
+    def get_connection(self) -> Connection:
         return self.mysqlConnection
