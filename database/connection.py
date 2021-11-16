@@ -5,6 +5,7 @@ from pymysql import Connection
 class ConnectionFactory:
 
     app = None
+    mysql = None
     mysqlConnection = None
 
     def __init__(self, app):
@@ -15,9 +16,10 @@ class ConnectionFactory:
         self.app.config['MYSQL_DATABASE_DB'] = 'gcj94fo1u2n7n1ze'
         self.app.config['MYSQL_DATABASE_HOST'] = 'z5zm8hebixwywy9d.cbetxkdyhwsb.us-east-1.rds.amazonaws.com'
 
-        mysql = MySQL(cursorclass=pymysql.cursors.DictCursor)
-        mysql.init_app(self.app)
-        self.mysqlConnection = mysql.connect()
+        self.mysql = MySQL(cursorclass=pymysql.cursors.DictCursor)
+        self.mysql.init_app(self.app)
+
 
     def get_connection(self) -> Connection:
+        self.mysqlConnection = self.mysql.connect()
         return self.mysqlConnection
